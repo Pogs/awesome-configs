@@ -180,6 +180,7 @@ beautiful.init(awful.util.getdir('config') .. '/themes/diehard/theme.lua')
 terminal = 'urxvt'
 editor = os.getenv('EDITOR') or 'vim'
 editor_cmd = terminal .. ' -e ' .. editor
+browser = os.getenv('BROWSER') or 'chromium'
 
 -- Default modkey.
 -- Usually, Mod4 is the key with a logo between Control and Alt.
@@ -474,6 +475,7 @@ globalkeys =
 
 		-- Standard program
 		awful.key({ modkey            }, 'Return', function () awful.util.spawn(terminal) end),
+		awful.key({ modkey, 'Shift'   }, 'Return', function () awful.util.spawn(browser)  end),
 
 		awful.key({ modkey, 'Control' }, 'r', awesome.restart),
 		awful.key({ modkey, 'Control' }, 'q', awesome.quit   ),
