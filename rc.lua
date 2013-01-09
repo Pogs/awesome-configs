@@ -646,7 +646,7 @@ client.connect_signal
 	'manage',
 	function (c, startup)
 		-- no gaps.
-		c.size_hints_honor = true
+		c.size_hints_honor = false
 
 		-- don't you fucking hide. :|
 		c.hidden           = false
