@@ -61,8 +61,10 @@ end
 -- }}}
 
 -- {{{ Variable definitions
+
 -- Themes define colours, icons, and wallpapers
-beautiful.init(os.getenv('HOME') .. '/clones/awesome/build/themes/default/theme.lua')
+beautiful.init(awful.util.getdir('config') .. '/themes/default/theme.lua')
+--beautiful.init(os.getenv('HOME') .. '/clones/awesome/build/themes/default/theme.lua')
 
 -- This is used later as the default terminal and editor to run.
 terminal = 'urxvt'
@@ -92,14 +94,17 @@ local layouts =
     awful.layout.suit.max.fullscreen,
     awful.layout.suit.magnifier
 }
+
 -- }}}
 
 -- {{{ Wallpaper
+
 if beautiful.wallpaper then
     for s = 1, screen.count() do
         gears.wallpaper.maximized(beautiful.wallpaper, s, true)
     end
 end
+
 -- }}}
 
 -- {{{ Tags
