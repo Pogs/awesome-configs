@@ -17,6 +17,7 @@ package.cpath =
 
 -- For loading awful and friends from the git build dir
 package.path =
+	os.getenv('HOME') .. '/.config/awesome/lib/?.lua;'           ..
 	os.getenv('HOME') .. '/clones/awesome/build/lib/?.lua;'      ..   
 	os.getenv('HOME') .. '/clones/awesome/build/lib/?/init.lua;' ..
 	package.path
@@ -45,6 +46,8 @@ local trem = table.remove
 local tunp = table.unpack
 
 local sformat = string.format
+
+local markup = require('markup')
 
 -- make tostring() vararg-capable
 do
