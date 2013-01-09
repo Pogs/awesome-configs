@@ -193,18 +193,18 @@ modkey = 'Mod4'
 -- Table of layouts to cover with awful.layout.inc, order matters.
 local layouts =
 {
-    awful.layout.suit.floating,
     awful.layout.suit.tile,
-    awful.layout.suit.tile.left,
+--    awful.layout.suit.tile.left,
     awful.layout.suit.tile.bottom,
-    awful.layout.suit.tile.top,
-    awful.layout.suit.fair,
+--    awful.layout.suit.tile.top,
+--    awful.layout.suit.fair,
     awful.layout.suit.fair.horizontal,
-    awful.layout.suit.spiral,
+--    awful.layout.suit.spiral,
     awful.layout.suit.spiral.dwindle,
     awful.layout.suit.max,
     awful.layout.suit.max.fullscreen,
-    awful.layout.suit.magnifier
+    awful.layout.suit.magnifier,
+    awful.layout.suit.floating,
 }
 
 -- }}}
@@ -226,7 +226,7 @@ tags = {}
 
 for s = 1, screen.count() do
     -- Each screen has its own tag table.
-    tags[s] = awful.tag({ 1, 2, 3, 4 }, s, layouts[2])
+    tags[s] = awful.tag({ 1, 2, 3, 4 }, s, layouts[1])
 end
 
 -- }}}
@@ -520,7 +520,7 @@ clientkeys =
 		awful.key({ modkey          }, 'f',      function (c) c.fullscreen = not c.fullscreen            end),
 		awful.key({ modkey          }, 'c',      function (c) c:kill()                                   end),
 		awful.key({ modkey, 'Shift' }, 't',      function (c) c.ontop = not c.ontop                      end),
-		awful.key({ modkey, 'Shift' }, 'Return', function (c) c:swap(awful.client.getmaster())           end),
+		awful.key({ modkey          }, '\\',     function (c) c:swap(awful.client.getmaster())           end),
 		awful.key({ modkey, 'Shift' }, '.',      function (c) awful.client.movetoscreen(c, c.screen + 1) end),
 		awful.key({ modkey, 'Shift' }, ',',      function (c) awful.client.movetoscreen(c, c.screen - 1) end),
 		awful.key
@@ -626,8 +626,9 @@ awful.rules.rules =
 		}
 	},
 
-    { rule = { class = 'MPlayer'    }, properties = { floating = true } },
-    { rule = { class = 'gtk2_prefs' }, properties = { floating = true } }
+    { rule = { class = 'MPlayer'       }, properties = { floating = true } },
+    { rule = { class = 'gnome-mplayer' }, properties = { floating = true } },
+    { rule = { class = 'gtk2_prefs'    }, properties = { floating = true } }
 
     -- Set Firefox to always map on tags number 2 of screen 1.
     -- { rule = { class = 'Firefox' }, properties = { tag = tags[1][2] } },
