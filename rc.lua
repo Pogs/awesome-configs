@@ -383,7 +383,7 @@ for s = 1, screen.count() do
     mytasklist[s] = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, mytasklist.buttons)
 
     -- Create the wibox
-    mywibox[s] = awful.wibox({ position = 'bottom', screen = s })
+    mywibox[s] = awful.wibox({ position = 'bottom', height = 18, screen = s })
 
     -- Widgets that are aligned to the left
     local left_layout = wibox.layout.fixed.horizontal()
@@ -441,9 +441,9 @@ globalkeys =
 		awful.key({ modkey            }, 'w', function () mymainmenu:show() end),
 
 		-- Layout manipulation
-		awful.key({ modkey, 'Shift'   }, 'space', function () awful.layout.inc(set.layouts,  1)            end),
-		awful.key({ modkey, 'Control' }, 'Left',  function () awful.layout.inc(set.layouts,  1)            end),
-		awful.key({ modkey, 'Control' }, 'Right', function () awful.layout.inc(set.layouts, -1)            end),
+		awful.key({ modkey, 'Shift'   }, 'space', function () awful.layout.inc(layouts,  1)                end),
+		awful.key({ modkey, 'Control' }, 'Left',  function () awful.layout.inc(layouts,  1)                end),
+		awful.key({ modkey, 'Control' }, 'Right', function () awful.layout.inc(layouts, -1)                end),
 
 		awful.key({ modkey,           }, 't',     function () awful.layout.set(awful.layout.suit.tile    ) end),
 		awful.key({ modkey,           }, 'e',     function () awful.layout.set(awful.layout.suit.fair    ) end),
