@@ -647,11 +647,15 @@ awful.rules.rules =
 		rule       = {},
 		properties =
 		{
-			border_width = beautiful.border_width,
-			border_color = beautiful.border_normal,
-			focus        = awful.client.focus.filter,
-			keys         = clientkeys,
-			buttons      = clientbuttons
+			border_width     = beautiful.border_width,
+			border_color     = beautiful.border_normal,
+			focus            = awful.client.focus.filter,
+			keys             = clientkeys,
+			buttons          = clientbuttons,
+			size_hints_honor = false, -- no gaps
+			hidden           = false,
+			minimized        = false,
+			skip_taskbar     = false
 		}
 	},
 
@@ -666,19 +670,12 @@ awful.rules.rules =
 -- }}}
 
 -- {{{ Signals
+
 -- Signal function to execute when a new client appears.
 client.connect_signal
 (
 	'manage',
 	function (c, startup)
-		-- no gaps.
-		c.size_hints_honor = false
-
-		-- don't you fucking hide. :|
-		c.hidden           = false
-		c.minimized        = false
-		c.skip_taskbar     = false
-
 		-- Enable sloppy focus
 		c:connect_signal
 		(
