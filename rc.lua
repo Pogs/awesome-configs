@@ -14,6 +14,8 @@ do
 	)
 end
 
+local HOME = os.getenv('HOME')
+
 -- For loading the 5.1 lgi .so
 package.cpath =
 	'/usr/lib/lua/5.1/?.so;'       ..   
@@ -22,9 +24,9 @@ package.cpath =
 
 -- For loading awful and friends from the git build dir
 package.path =
-	os.getenv('HOME') .. '/.config/awesome/lib/?.lua;'           ..
-	os.getenv('HOME') .. '/clones/awesome/build/lib/?.lua;'      ..   
-	os.getenv('HOME') .. '/clones/awesome/build/lib/?/init.lua;' ..
+	HOME .. '/.config/awesome/lib/?.lua;'        ..
+	HOME .. '/clones/awesome/lib/?.lua.in;'      ..   
+	HOME .. '/clones/awesome/lib/?/init.lua.in;' ..
 	package.path
 
 
