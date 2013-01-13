@@ -29,7 +29,6 @@ package.path =
 	HOME .. '/clones/awesome/lib/?/init.lua.in;' ..
 	package.path
 
-
 -- Standard awesome library
 local gears = require('gears')
 local awful = require('awful')
@@ -46,7 +45,6 @@ local beautiful = require('beautiful')
 
 -- Notification library
 local naughty = require('naughty')
-local menubar = require('menubar')
 
 -- table function aliases
 local tins = table.insert
@@ -64,6 +62,7 @@ local sformat = string.format
 require('strict')
 
 local markup = require('markup')
+local poprun = require('poprun')
 
 -- make tostring() vararg-capable
 do
@@ -280,8 +279,6 @@ mylauncher =
 		}
 	)
 
--- Menubar configuration
-menubar.utils.terminal = terminal -- Set the terminal for applications that require it
 
 -- }}}
 
@@ -292,7 +289,6 @@ mytextclock = awful.widget.textclock()
 
 -- Create a wibox for each screen and add it
 mywibox     = {}
-mypromptbox = {}
 mylayoutbox = {}
 mytaglist   = {}
 
@@ -375,9 +371,6 @@ mytasklist.buttons =
 	)
 
 for s = 1, screen.count() do
-	-- Create a promptbox for each screen
-	mypromptbox[s] = awful.widget.prompt()
-
 	-- Create an imagebox widget which will contains an icon indicating which layout we're using.
 	-- We need one layoutbox per screen.
 	mylayoutbox[s] = awful.widget.layoutbox(s)
@@ -407,7 +400,6 @@ for s = 1, screen.count() do
 
     left_layout:add(mylauncher    )
     left_layout:add(mytaglist[s]  )
-    left_layout:add(mypromptbox[s])
 
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
@@ -523,7 +515,7 @@ globalkeys =
 		akey({           }, 'XF86Eject',     function () awful.util.spawn_with_shell('eject --traytoggle &') end),
 
 		-- Prompt
-		akey({ modkey            }, 'r',     function () mypromptbox[mouse.screen]:run() end),
+		akey({ modkey, 'Shift'   }, 'p', poprun.run_prompt),
 
 		akey
 		(
@@ -539,10 +531,7 @@ globalkeys =
 					awful.util.getdir('cache') .. '/history_eval'
 				)
 			end
-		),
-
-		-- Menubar
-		akey({ modkey }, 'p', function() menubar.show() end)
+		)
 )
 
 clientkeys =
