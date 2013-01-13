@@ -1,6 +1,6 @@
 ---------------------------------------------
--- Awesome 3 (git) configuration file by | -- 
---------------------------------------------- 
+-- Awesome 3 (git) configuration file by | --
+---------------------------------------------
 
 do
 	local k, b = collectgarbage('count')
@@ -18,14 +18,14 @@ local HOME = os.getenv('HOME')
 
 -- For loading the 5.1 lgi .so
 package.cpath =
-	'/usr/lib/lua/5.1/?.so;'       ..   
+	'/usr/lib/lua/5.1/?.so;'       ..
 	'/usr/lib/lua/5.1/loadall.so;' ..
 	package.cpath
 
 -- For loading awful and friends from the git build dir
 package.path =
 	HOME .. '/.config/awesome/lib/?.lua;'        ..
-	HOME .. '/clones/awesome/lib/?.lua.in;'      ..   
+	HOME .. '/clones/awesome/lib/?.lua.in;'      ..
 	HOME .. '/clones/awesome/lib/?/init.lua.in;' ..
 	package.path
 
@@ -86,7 +86,7 @@ end
 do
 	local presets =
 	{
-		screen        = 1, 
+		screen        = 1,
 		position      = 'top_right',
 		timeout       = 20,
 		hover_timeout = 0.5
@@ -724,15 +724,15 @@ for s = 1, screen.count() do
 					not c.fullscreen and
 					layout ~= 'floating' and
 					layout ~= 'magnifier'
-				then 
+				then
 					if awful.client.floating.get(c) then
 						c.above = true
 					end
 --					c.above = awful.client.floating.get(c)
-                end  
-            end  
-        end  
-    )    
+                end
+            end
+        end
+    )
 end
 
 client.connect_signal('focus',   function(c) c.border_color = beautiful.border_focus  end)
