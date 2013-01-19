@@ -64,6 +64,8 @@ require('strict')
 local markup = require('markup')
 local poprun = require('poprun')
 
+poprun:set_slide(true)
+
 -- make tostring() vararg-capable
 do
 	local orig_tostring = tostring
@@ -515,7 +517,7 @@ globalkeys =
 		akey({           }, 'XF86Eject',     function () awful.util.spawn_with_shell('eject --traytoggle &') end),
 
 		-- Prompt
-		akey({ modkey, 'Shift'   }, 'p', poprun.run_prompt),
+		akey({ modkey    }, 'p', poprun.run_prompt),
 
 		akey
 		(
