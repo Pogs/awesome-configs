@@ -65,6 +65,7 @@ local markup = require('markup')
 local poprun = require('poprun')
 
 poprun:set_slide(true)
+poprun:set_move_time(0.15)
 
 -- make tostring() vararg-capable
 do
@@ -517,23 +518,7 @@ globalkeys =
 		akey({           }, 'XF86Eject',     function () awful.util.spawn_with_shell('eject --traytoggle &') end),
 
 		-- Prompt
-		akey({ modkey    }, 'p', poprun.run_prompt),
-
-		akey
-		(
-			{ modkey },
-			'x',
-			function ()
-				awful.prompt.run
-				(
-					{ prompt = 'Run Lua code: ' },
-					mypromptbox[mouse.screen].widget,
-					awful.util.eval,
-					nil,
-					awful.util.getdir('cache') .. '/history_eval'
-				)
-			end
-		)
+		akey({ modkey    }, 'p', poprun.run_prompt)
 )
 
 clientkeys =

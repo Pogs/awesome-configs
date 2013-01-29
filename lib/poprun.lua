@@ -3,6 +3,7 @@
 -- Copyright 2009 Andrei 'Garoth' Thorp --
 ------------------------------------------
 
+local setmetatable = setmetatable
 local mouse  = mouse
 local awful  = require('awful')
 local screen = screen
@@ -21,54 +22,28 @@ local tbox  = require('wibox.widget.textbox')
 
 local _ENV = {}
 
-defaults = {}
+local defaults =
+{
+	opacity             = 1.0, -- fully opaque
+	prompt_string       = ' RUN: ',
+	slide               = false, -- animation disabled by default
+	width               = 0.6, -- 60% of screen width
+	height              = 22, -- 22px
+	border_width        = 1,
+	move_time           = 0.2, -- total time for animation
+	move_amount         = 5, -- 5px moves
+	run_function        = awful.util.spawn,
+	completion_function = awful.completion.shell,
+	cache               = '/poprun_history'
+}
 
--- Default is 1 for people without compositing
-defaults.opacity = 1.0
-defaults.prompt_string = ' RUN: '
-defaults.prompt_font = nil
+local settings = setmetatable({}, { __index = defaults })
 
--- Whether or not the bar should slide up or just pop up
-defaults.slide = false
-
--- Bar will be percentage of screen width
-defaults.width = 0.6
-
--- Bar will be this high in pixels
-defaults.height = 22
-defaults.border_width = 1
-
--- When sliding, it'll move this often (in seconds)
-defaults.move_time = 0.2
-
--- When sliding, it'll move this many pixels per move
-defaults.move_amount = 5
-
--- Default run function
-defaults.run_function = awful.util.spawn
-
--- Default completion function
-defaults.completion_function = awful.completion.shell
-
--- Default cache
-defaults.cache = '/history'
-
--- Default position
-defaults.position = 'top'
-
--- Clone the defaults for the used settings
-settings = {}
-
-for key, value in pairs(defaults) do
-    settings[key] = value
-end
-
-local w = nil
-local p = nil
+local w, p = nil, nil
 
 local inited = false
 
-local set_center  =
+local move_to_center =
 	function (s)
 		local geom = screen[s].geometry
 
@@ -77,11 +52,11 @@ local set_center  =
 			width  = geom.width * settings.width,
 			height = settings.height,
 			x      = geom.x + geom.width * ((1 - settings.width) / 2),
-			y      = geom.y + mfloor((geom.height - settings.height) / 2)
+			y      = geom.y + mfloor((geom.height - w:geometry().height) / 2)
 		}
 	end
 
-local set_default =
+local move_to_bottom =
 	function (s)
 		local geom = screen[s].geometry
 
@@ -90,7 +65,7 @@ local set_default =
 			width  = geom.width * settings.width,
 			height = settings.height,
 			x      = geom.x + geom.width * ((1 - settings.width) / 2),
-			y      = geom.y + geom.height - settings.height
+			y      = geom.y + geom.height - w:geometry().height
 		}
 	end
 
@@ -105,6 +80,8 @@ local ensure_init =
 		p = tbox()
 
 		p:set_align('left')
+		p:set_valign('center')
+		p:set_align('center')
 
 		local left_layout = wibox.layout.fixed.horizontal()
 
@@ -123,15 +100,16 @@ local ensure_init =
 					fg           = beautiful.fg_focus,
 					bg           = beautiful.bg_normal,
 					border_width = settings.border_width,
-					border_color = beautiful.bg_focus,
+					border_color = beautiful.fg_focus,
 					ontop        = true,
 					opacity      = settings.opacity
 				}
 			)
 
+		w.visible = false
+
 		w:set_widget(w_layout)
 
-		w.visible = false
 	end
 
 local ticker = nil -- one timer for both up and down sliders, because we're trying to be good to mem. :(
@@ -172,17 +150,11 @@ local show_wibox =
 		w.visible = true
 
 		if not settings.slide then
-			set_center(s)
+			move_to_center(s)
 			return
 		end
 
-		set_default(s)
-
-		-- changing visible property would reset wibox geometry to its defaults
-		-- Might be 0 if position is set to 'top'
-		-- Thus the wibox has to be shown before setting its original slide up
-		-- position. As a side effect, the top bar might blink if position is set
-		-- to 'top'.
+		move_to_bottom(s)
 
 		if not ticker then
 			-- try to calculate the number of moves
@@ -202,7 +174,7 @@ local hide_wibox =
 		local geom = screen[s].geometry
 
 		if not settings.slide then
-			set_center(s)
+			move_to_center(s)
 			w.visible = false
 			return
 		end
@@ -238,56 +210,34 @@ run_prompt =
 		)
 	end
 
-local update_settings =
-	function ()
-		w.border_width = settings.border_width
-
-		w.opacity = settings.opacity
-	end
-
 -- SETTINGS
-set_opacity =
-	function (amount)
-		settings.opacity = amount or defaults.opacity
 
-		update_settings()
-	end
-
-set_prompt_string =
-	function (string)
-		settings.prompt_string = string or defaults.prompt_string
-	end
-
-
-
-set_width =
-	function (amount)
-		settings.width = amount or defaults.width
-
-		update_settings()
-	end
-
-set_height =
-	function (amount)
-		settings.height = amount or defaults.height
-
-		update_settings()
-	end
+set_prompt_string       = function (self, string) settings.prompt_string       = string end
+set_width               = function (self, amount) settings.width               = amount end
+set_height              = function (self, amount) settings.height              = amount end
+set_prompt_font         = function (self, font  ) settings.prompt_font         = font   end
+set_slide               = function (self, tf    ) settings.slide               = tf     end
+set_move_amount         = function (self, amount) settings.move_amount         = amount end
+set_run_function        = function (self, fn    ) settings.run_function        = fn     end
+set_completion_function = function (self, fn    ) settings.completion_function = fn     end
+set_cache               = function (self, c     ) settings.cache               = c      end
 
 set_border_width =
-	function (amount)
-		settings.border_width = amount or defaults.border_width
-
-		update_settings()
+	function (self, amount)
+		settings.border_width = amount
+		w.border_width        = settings.border_width
 	end
 
-set_prompt_font         = function (font  ) settings.prompt_font         = font   or defaults.prompt_font         end
-set_slide               = function (tf    ) settings.slide               = tf     or defaults.slide               end
-set_move_time           = function (amount) settings.move_time           = amount or defaults.move_time           end
-set_move_amount         = function (amount) settings.move_amount         = amount or defaults.move_amount         end
-set_run_function        = function (fn    ) settings.run_function        = fn     or defaults.run_function        end
-set_position            = function (p     ) settings.position            = p                                      end
-set_completion_function = function (fn    ) settings.completion_function = fn     or defaults.completion_function end
-set_cache               = function (c     ) settings.cache               = c      or defaults.cache               end
+set_move_time =
+	function (self, amount)
+		settings.move_time = amount
+		ticker = nil -- invalidate the only timer
+	end
+
+set_opacity =
+	function (self, amount)
+		settings.opacity = amount
+		w.opacity        = settings.opacity
+	end
 
 return _ENV
